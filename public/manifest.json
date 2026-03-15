@@ -1,19 +1,24 @@
 {
-  "name": "VantoOS - AI Executive Command Center",
-  "short_name": "VantoOS",
-  "description": "AI-powered executive command center",
+  "name": "Vanto CRM - WhatsApp AI CRM",
+  "short_name": "Vanto CRM",
+  "description": "WhatsApp AI CRM for MLM & APLGO Associates",
   "start_url": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#0f172a",
-  "theme_color": "#1F4E79",
+  "theme_color": "#0d9488",
   "icons": [
-    { "src": "/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "/logo.jpg",
+      "sizes": "any",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
   ],
-  "shortcuts": [
-    { "name": "Dashboard", "url": "/" },
-    { "name": "Plan Hub", "url": "/plan" },
-    { "name": "Email", "url": "/email" },
-    { "name": "Finance", "url": "/finance" }
-  ]
+  "categories": ["business", "productivity"]
 }

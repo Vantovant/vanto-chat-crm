@@ -5,21 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vanto CRM - WhatsApp AI CRM</title>
     
-    <!-- Favicon -->
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <!-- Favicon - Using YOUR logo -->
+    <link rel="icon" href="/logo.jpg" type="image/jpeg" />
+    <link rel="shortcut icon" href="/logo.jpg" type="image/jpeg" />
+    <link rel="apple-touch-icon" href="/logo.jpg" />
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
     
     <!-- PWA Theme Colors -->
     <meta name="theme-color" content="#0d9488" />
-    <meta name="background-color" content="#0f172a" />
+    <meta name="mobile-web-app-capable" content="yes" />
     
     <!-- iOS PWA Support -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Vanto CRM" />
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+    
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-TileColor" content="#0d9488" />
+    <meta name="msapplication-TileImage" content="/logo.jpg" />
     
     <!-- SEO -->
     <meta name="description" content="Vanto CRM - WhatsApp AI CRM for MLM & APLGO Associates">
@@ -34,7 +39,7 @@
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/sw.js')
-            .then((reg) => console.log('PWA: Service Worker registered'))
+            .then((reg) => console.log('PWA: Service Worker registered', reg.scope))
             .catch((err) => console.log('PWA: Registration failed', err));
         });
       }
