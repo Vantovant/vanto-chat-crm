@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline - Vanto CRM</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 { color: #14b8a6; font-size: 32px; }
+    p { color: #94a3b8; font-size: 16px; }
+    button {
+      background: #14b8a6;
+      color: #0f172a;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-weight: 600;
+    }
+    button:hover { background: #0d9488; }
+    .logo { color: #14b8a6; font-size: 20px; font-weight: bold; margin-bottom: 30px; }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="logo">⚡ Vanto CRM</div>
+    <h1>📡 You're Offline</h1>
+    <p>Check your internet connection and try again.</p>
+    <button onclick="location.reload()">Try Again</button>
+  </div>
+</body>
+</html>
