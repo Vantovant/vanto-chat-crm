@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Vanto Command Hub 2.0 — Dark WhatsApp CRM Design System */
+
+@layer base {
+  :root {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 10%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 172 66% 50%;
+    --primary-foreground: 222 47% 6%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 14%;
+    --muted-foreground: 215 20% 55%;
+
+    --accent: 172 66% 50%;
+    --accent-foreground: 222 47% 6%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 172 66% 50%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 222 47% 7%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 172 66% 50%;
+    --sidebar-primary-foreground: 222 47% 6%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 172 66% 50%;
+
+    --chart-1: 172 66% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 197 71% 52%;
+    --chart-4: 43 96% 56%;
+    --chart-5: 27 96% 61%;
+
+    /* Vanto specific tokens */
+    --hot: 0 84% 60%;
+    --warm: 38 96% 56%;
+    --cold: 217 91% 60%;
+    --sidebar-width: 64px;
+    --sidebar-width-expanded: 220px;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: hsl(var(--muted)); }
+::-webkit-scrollbar-thumb { background: hsl(var(--muted-foreground) / 0.3); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--primary) / 0.5); }
+
+.vanto-gradient { background: linear-gradient(135deg, hsl(var(--primary)), hsl(172 80% 35%)); }
+.vanto-card { background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: var(--radius); }
+.message-bubble-in { background: hsl(var(--secondary)); border-radius: 0 12px 12px 12px; }
+.message-bubble-out { background: hsl(var(--primary) / 0.15); border-radius: 12px 0 12px 12px; border: 1px solid hsl(var(--primary) / 0.3); }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
