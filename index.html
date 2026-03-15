@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vanto CRM - WhatsApp AI CRM</title>
     
-    <!-- Favicon - Using YOUR logo -->
+    <!-- Favicon -->
     <link rel="icon" href="/logo.jpg" type="image/jpeg" />
     <link rel="shortcut icon" href="/logo.jpg" type="image/jpeg" />
     <link rel="apple-touch-icon" href="/logo.jpg" />
@@ -28,14 +28,88 @@
     
     <!-- SEO -->
     <meta name="description" content="Vanto CRM - WhatsApp AI CRM for MLM & APLGO Associates">
+    
+    <style>
+      #pwa-install-banner {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #14b8a6, #0d9488);
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        z-index: 999999;
+        font-family: system-ui, sans-serif;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        gap: 12px;
+        font-size: 16px;
+        font-weight: 600;
+      }
+      #pwa-install-banner:hover {
+        transform: translateX(-50%) scale(1.02);
+      }
+      #pwa-install-banner .close-btn {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+      }
+    </style>
   </head>
 
   <body>
     <div id="root"></div>
+    
+    <!-- PWA Install Banner -->
+    <div id="pwa-install-banner">
+      <span>📱 Install Vanto CRM as an App</span>
+      <button id="pwa-install-btn">Install</button>
+      <button class="close-btn" id="pwa-close-btn">×</button>
+    </div>
+    
     <script type="module" src="/src/main.tsx"></script>
     
-    <!-- Service Worker Registration -->
+    <!-- PWA Installation Script -->
     <script>
+      let deferredPrompt;
+      const installBanner = document.getElementById('pwa-install-banner');
+      const installBtn = document.getElementById('pwa-install-btn');
+      const closeBtn = document.getElementById('pwa-close-btn');
+      
+      // Listen for the install prompt
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBanner.style.display = 'flex';
+        console.log('PWA: Install prompt available');
+      });
+      
+      // Install button click
+      installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          console.log('PWA: User choice:', outcome);
+          deferredPrompt = null;
+          installBanner.style.display = 'none';
+        }
+      });
+      
+      // Close button
+      closeBtn.addEventListener('click', () => {
+        installBanner.style.display = 'none';
+      });
+      
+      // Service Worker Registration
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/sw.js')
@@ -43,6 +117,12 @@
             .catch((err) => console.log('PWA: Registration failed', err));
         });
       }
+      
+      // Log when installed
+      window.addEventListener('appinstalled', () => {
+        console.log('PWA: App installed!');
+        installBanner.style.display = 'none';
+      });
     </script>
   </body>
 </html>
