@@ -1,12 +1,14 @@
 // Vanto CRM Chrome Extension - Background Service Worker v6.0
-// Updated for NEW Supabase with enhanced logging and 90s timeout
+// VERCEL EDITION - Uses same Supabase as Lovable
+// Updated with enhanced logging and 90s timeout
 
 // =====================================================
-// CONFIGURATION - UPDATE ANON KEY BELOW
+// CONFIGURATION
 // =====================================================
-const SUPABASE_URL = 'https://qjlixkhctdkhvrgsflex.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR_NEW_SUPABASE_ANON_KEY_HERE'; // <-- REPLACE THIS WITH YOUR ACTUAL ANON KEY
+const SUPABASE_URL = 'https://nqyyvqcmcyggvlcswkio.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5xeXl2cWNtY3lnZ3ZsY3N3a2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1NDYxMjYsImV4cCI6MjA4NzEyMjEyNn0.oK04GkXogHo9pohYd4A7XAV0-Q-qSu-uUiGWaj4ClM8';
 const EXECUTION_TIMEOUT = 90000; // 90 seconds (increased from 45s)
+const DASHBOARD_URL = 'https://vanto-chat-crm.vercel.app';
 
 // =====================================================
 // LOGGING UTILITY
