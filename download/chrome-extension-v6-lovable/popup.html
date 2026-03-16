@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Vanto CRM (Lovable)</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 280px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: hsl(222, 47%, 6%);
+      color: hsl(210, 40%, 98%);
+    }
+
+    .container {
+      padding: 16px;
+    }
+
+    .header {
+      text-align: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid hsl(217, 33%, 17%);
+      margin-bottom: 16px;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: hsl(172, 66%, 50%);
+      margin-bottom: 4px;
+    }
+
+    .version {
+      font-size: 11px;
+      color: hsl(215, 20%, 55%);
+    }
+
+    .edition {
+      font-size: 10px;
+      color: hsl(33, 90%, 70%);
+      margin-top: 2px;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: hsl(215, 20%, 55%);
+      margin-bottom: 4px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      background: hsl(222, 47%, 9%);
+      border: 1px solid hsl(217, 33%, 17%);
+      border-radius: 6px;
+      color: hsl(210, 40%, 98%);
+      font-size: 14px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: hsl(172, 66%, 50%);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+
+    .btn-primary {
+      background: hsl(172, 66%, 50%);
+      color: hsl(222, 47%, 6%);
+    }
+
+    .btn-primary:hover {
+      background: hsl(172, 66%, 44%);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: hsl(215, 20%, 55%);
+      border: 1px solid hsl(217, 33%, 17%);
+    }
+
+    .btn-secondary:hover {
+      border-color: hsl(172, 66%, 50%);
+      color: hsl(172, 66%, 50%);
+    }
+
+    .btn-danger {
+      background: hsl(0, 84%, 50%);
+      color: white;
+    }
+
+    .error {
+      background: hsl(0, 84%, 30%);
+      color: hsl(0, 84%, 90%);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .success {
+      background: hsl(172, 66%, 30%);
+      color: hsl(172, 66%, 90%);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .user-info {
+      text-align: center;
+      padding: 16px;
+      background: hsl(222, 47%, 9%);
+      border-radius: 6px;
+      margin-bottom: 16px;
+    }
+
+    .user-email {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .user-status {
+      font-size: 12px;
+      color: hsl(172, 66%, 50%);
+    }
+
+    .links {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid hsl(217, 33%, 17%);
+    }
+
+    .link-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid hsl(217, 33%, 17%);
+      border-radius: 6px;
+      color: hsl(210, 40%, 98%);
+      font-size: 13px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      text-decoration: none;
+    }
+
+    .link-btn:hover {
+      border-color: hsl(172, 66%, 50%);
+      background: hsl(222, 47%, 9%);
+    }
+
+    .back-link {
+      color: hsl(215, 20%, 55%);
+      font-size: 12px;
+      cursor: pointer;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    .back-link:hover {
+      color: hsl(210, 40%, 98%);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">Vanto CRM</div>
+      <div class="version">v6.0.0</div>
+      <div class="edition">Lovable Edition</div>
+    </div>
+
+    <!-- Login View -->
+    <div id="view-login" class="view active">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="your@email.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="••••••••">
+      </div>
+      <div id="login-error" class="error"></div>
+      <button class="btn btn-primary" id="login-btn">Log In</button>
+      <button class="btn btn-secondary" id="forgot-btn">Forgot Password?</button>
+    </div>
+
+    <!-- Logged In View -->
+    <div id="view-loggedin" class="view">
+      <div class="user-info">
+        <div class="user-email" id="user-email"></div>
+        <div class="user-status">● Logged In</div>
+      </div>
+      <button class="btn btn-danger" id="logout-btn">Log Out</button>
+
+      <div class="links">
+        <a href="https://web.whatsapp.com" target="_blank" class="link-btn">
+          📱 Open WhatsApp Web
+        </a>
+        <a href="https://chat.onlinecourseformlm.com" target="_blank" class="link-btn">
+          📊 Open Dashboard
+        </a>
+      </div>
+    </div>
+
+    <!-- Forgot Password View -->
+    <div id="view-forgot" class="view">
+      <span class="back-link" id="back-to-login">← Back to Login</span>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="forgot-email" placeholder="your@email.com">
+      </div>
+      <div id="forgot-error" class="error"></div>
+      <div id="forgot-success" class="success"></div>
+      <button class="btn btn-primary" id="reset-btn">Send Reset Link</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

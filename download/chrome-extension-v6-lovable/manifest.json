@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "Vanto CRM — WhatsApp Sidebar (Lovable)",
+  "version": "6.0.0",
+  "description": "AI-powered CRM sidebar for WhatsApp Web with Group Campaigns auto-posting - Lovable Edition",
+  "permissions": ["storage", "activeTab", "tabs", "alarms"],
+  "host_permissions": [
+    "https://web.whatsapp.com/*",
+    "https://nqyyvqcmcyggvlcswkio.supabase.co/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [{
+    "matches": ["https://web.whatsapp.com/*"],
+    "js": ["content.js"],
+    "css": ["sidebar.css"],
+    "run_at": "document_idle"
+  }],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
