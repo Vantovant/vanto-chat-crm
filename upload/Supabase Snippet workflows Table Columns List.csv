@@ -1,0 +1,10 @@
+column_name,data_type,is_nullable,column_default
+id,uuid,NO,gen_random_uuid()
+name,text,NO,null
+description,text,YES,null
+active,boolean,NO,false
+steps,jsonb,NO,'[]'::jsonb
+contact_count,integer,NO,0
+created_by,uuid,YES,null
+created_at,timestamp with time zone,NO,now()
+updated_at,timestamp with time zone,NO,now()

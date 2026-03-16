@@ -1,0 +1,8 @@
+column_name,data_type,is_nullable,column_default
+id,uuid,NO,gen_random_uuid()
+source,text,NO,null
+action,text,NO,null
+payload,jsonb,YES,null
+status,text,NO,'received'::text
+error,text,YES,null
+created_at,timestamp with time zone,NO,now()
