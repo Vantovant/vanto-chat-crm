@@ -1,13 +1,15 @@
-// Vanto CRM Chrome Extension - Content Script v6.2.0
-// v6.2: Enhanced reliability with programmatic injection support
+// Vanto CRM Chrome Extension - Content Script v6.2.1
+// VERCEL EDITION - Uses vanto-chat-crm.vercel.app
+// v6.2.1: Improved initialization with visible console logging
 
 (function() {
   'use strict';
 
   // =====================================================
-  // CONFIGURATION
+  // CONFIGURATION - VERCEL EDITION
   // =====================================================
-  const VERSION = '6.2.0 (Vercel)';
+  const VERSION = '6.2.1 (Vercel)';
+  const DASHBOARD_URL = 'https://vanto-chat-crm.vercel.app';
   const DETECTION_DEBOUNCE_MS = 600;
   const POLLING_INTERVAL_MS = 1500;
 
@@ -34,7 +36,7 @@
 
   function log(message, data = null) {
     const timestamp = new Date().toISOString();
-    const prefix = `[VANTO CS v${VERSION} ${timestamp}]`;
+    const prefix = `[VANTO CS (Lovable) v${VERSION} ${timestamp}]`;
     if (data) {
       console.log(prefix, message, data);
     } else {
@@ -50,7 +52,7 @@
 
   function logError(message, error = null) {
     const timestamp = new Date().toISOString();
-    const prefix = `[VANTO CS ERROR ${timestamp}]`;
+    const prefix = `[VANTO CS ERROR (Lovable) ${timestamp}]`;
     if (error) {
       console.error(prefix, message, error);
     } else {
@@ -302,7 +304,7 @@
       </div>
       <div id="vanto-auth-banner" class="vanto-auth-banner" style="display: none;">
         <p>Please log in to save contacts</p>
-        <a href="https://vanto-chat-crm.vercel.app" target="_blank">Open Dashboard</a>
+        <a href="${DASHBOARD_URL}" target="_blank">Open Dashboard</a>
       </div>
       <div class="vanto-contact-card">
         <div class="vanto-avatar" id="vanto-avatar">?</div>
@@ -371,7 +373,7 @@
         </div>
       </div>
       <div class="vanto-footer">
-        <a href="https://vanto-chat-crm.vercel.app" target="_blank">Open Dashboard →</a>
+        <a href="${DASHBOARD_URL}" target="_blank">Open Dashboard →</a>
       </div>
     `;
 
@@ -1119,7 +1121,13 @@
 
       case 'VANTO_PING':
         log('Received heartbeat ping');
-        sendResponse({ success: true, pong: true });
+        sendResponse({ success: true, pong: true, initialized: isInitialized });
+        break;
+
+      case 'VANTO_INIT':
+        log('Received manual init request');
+        const initResult = await init();
+        sendResponse({ success: initResult, initialized: isInitialized });
         break;
 
       case 'VANTO_EXECUTE_GROUP_POST':
@@ -1149,39 +1157,81 @@
   // =====================================================
   // INITIALIZATION
   // =====================================================
-  async function init() {
-    log('Content script v' + VERSION + ' initializing...');
+  let isInitialized = false;
 
-    // Wait for WhatsApp to load
+  async function init() {
+    // Prevent double initialization
+    if (isInitialized) {
+      log('Already initialized, skipping');
+      return true;
+    }
+
+    log('Content script v' + VERSION + ' initializing...');
+    console.log('%c[VANTO CRM] Content script v' + VERSION + ' starting...', 'background: #00d4aa; color: #000; padding: 4px 8px; font-weight: bold;');
+
+    // Wait for WhatsApp to load - check for main elements
     let attempts = 0;
-    const maxAttempts = 60;
+    const maxAttempts = 30; // 15 seconds max
 
     while (attempts < maxAttempts) {
       const appEl = document.querySelector('#app');
-      if (appEl && document.readyState === 'complete') {
+      const paneSide = document.querySelector('#pane-side');
+      
+      // WhatsApp is ready when we have #app AND either document is complete OR we can see the chat list
+      if (appEl && (document.readyState === 'complete' || paneSide)) {
+        log('WhatsApp DOM detected, readyState:', document.readyState);
         break;
       }
+      
+      log('Waiting for WhatsApp... attempt', attempts + 1, 'readyState:', document.readyState);
       await sleep(500);
       attempts++;
     }
 
     if (attempts >= maxAttempts) {
       logError('WhatsApp did not load within timeout');
-      return;
+      console.log('%c[VANTO CRM] WhatsApp load timeout - will try anyway', 'background: #ff6b6b; color: #fff; padding: 4px 8px;');
+      // Don't return - try to create sidebar anyway
     }
 
-    log('WhatsApp loaded, creating sidebar...');
+    try {
+      log('Creating sidebar and toggle button...');
+      createSidebar();
+      createToggleButton();
+      
+      // Verify elements were created
+      const sidebarEl = document.getElementById('vanto-crm-sidebar');
+      const toggleEl = document.getElementById('vanto-crm-toggle');
+      
+      if (!sidebarEl || !toggleEl) {
+        logError('Failed to create UI elements');
+        return false;
+      }
+      
+      console.log('%c[VANTO CRM] Sidebar and toggle button created!', 'background: #00d4aa; color: #000; padding: 4px 8px; font-weight: bold;');
+      
+      isInitialized = true;
+      
+      await checkAuthState();
+      watchChatChanges();
+      runDetection();
 
-    createSidebar();
-    createToggleButton();
-    await checkAuthState();
-    watchChatChanges();
-    runDetection();
-
-    log('Content script initialized');
+      log('Content script initialized successfully');
+      return true;
+    } catch (error) {
+      logError('Initialization error', error);
+      return false;
+    }
   }
 
-  // Start initialization
-  init();
+  // Start initialization when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(init, 100);
+    });
+  } else {
+    // DOM already loaded, wait a bit for WhatsApp to render
+    setTimeout(init, 500);
+  }
 
 })();

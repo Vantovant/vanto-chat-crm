@@ -1,10 +1,11 @@
-// Vanto CRM Chrome Extension - Background Service Worker v6.2.0
+// Vanto CRM Chrome Extension - Background Service Worker v6.2.1
 // VERCEL EDITION - Uses same Supabase as Lovable
+// v6.2.1: Improved content script initialization with proactive tab injection
 // v6.2: Added programmatic content script injection fallback
 // v6.1: Fixed failure_reason column, added retry logic, content script ping check
 
 // =====================================================
-// CONFIGURATION
+// CONFIGURATION - UPDATE ANON KEY BELOW
 // =====================================================
 const SUPABASE_URL = 'https://nqyyvqcmcyggvlcswkio.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5xeXl2cWNtY3lnZ3ZsY3N3a2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1NDYxMjYsImV4cCI6MjA4NzEyMjEyNn0.oK04GkXogHo9pohYd4A7XAV0-Q-qSu-uUiGWaj4ClM8';
@@ -338,8 +339,19 @@ async function ensureContentScriptInjected(tabId) {
   try {
     const response = await chrome.tabs.sendMessage(tabId, { type: 'VANTO_PING' });
     if (response && response.pong) {
-      log('Content script already active on tab:', tabId);
-      return true;
+      // Content script exists, but check if initialized
+      if (response.initialized) {
+        log('Content script already active and initialized on tab:', tabId);
+        return true;
+      } else {
+        log('Content script exists but not initialized, sending init...');
+        try {
+          const initResponse = await chrome.tabs.sendMessage(tabId, { type: 'VANTO_INIT' });
+          return initResponse && initResponse.initialized;
+        } catch (e) {
+          logError('Failed to init content script:', e);
+        }
+      }
     }
   } catch (e) {
     log('Content script not responding, will inject programmatically');
@@ -361,12 +373,23 @@ async function ensureContentScriptInjected(tabId) {
     });
     log('Content script injected programmatically');
 
-    // Wait a moment for initialization
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Wait for initialization
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
-    // Verify injection worked
-    const verifyResponse = await chrome.tabs.sendMessage(tabId, { type: 'VANTO_PING' });
-    return verifyResponse && verifyResponse.pong;
+    // Verify injection worked - try to init if needed
+    try {
+      const verifyResponse = await chrome.tabs.sendMessage(tabId, { type: 'VANTO_INIT' });
+      if (verifyResponse && verifyResponse.initialized) {
+        log('Content script initialized successfully');
+        return true;
+      }
+    } catch (e) {
+      logError('Failed to verify/init content script:', e);
+    }
+
+    // Final ping check
+    const pingResponse = await chrome.tabs.sendMessage(tabId, { type: 'VANTO_PING' });
+    return pingResponse && pingResponse.pong;
   } catch (injectError) {
     logError('Failed to inject content script:', injectError);
     return false;
@@ -686,4 +709,26 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // =====================================================
 log('Background service worker started');
 log('Supabase URL:', SUPABASE_URL);
+log('Dashboard URL:', DASHBOARD_URL);
 log('Execution timeout:', EXECUTION_TIMEOUT, 'ms');
+
+// =====================================================
+// TAB UPDATE LISTENER - Proactive injection
+// =====================================================
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  // Only act when the tab is done loading and is WhatsApp Web
+  if (changeInfo.status === 'complete' && tab.url && tab.url.includes('web.whatsapp.com')) {
+    log('WhatsApp tab updated, ensuring content script is injected:', tabId);
+    
+    // Give WhatsApp a moment to render
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Ensure content script is injected
+    const success = await ensureContentScriptInjected(tabId);
+    if (success) {
+      log('Content script ready on WhatsApp tab:', tabId);
+    } else {
+      logError('Failed to inject content script on WhatsApp tab:', tabId);
+    }
+  }
+});
