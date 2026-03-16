@@ -1,5 +1,5 @@
-// Vanto CRM Chrome Extension - Content Script v6.0
-// Enhanced with microstage tracing, stage timeouts, and detailed logging
+// Vanto CRM Chrome Extension - Content Script v6.1.0
+// v6.1: Enhanced with content script ping check for scheduled posts
 
 (function() {
   'use strict';
@@ -7,7 +7,7 @@
   // =====================================================
   // CONFIGURATION
   // =====================================================
-  const VERSION = '6.0.0';
+  const VERSION = '6.1.0 (Vercel)';
   const DETECTION_DEBOUNCE_MS = 600;
   const POLLING_INTERVAL_MS = 1500;
 
